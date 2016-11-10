@@ -4,59 +4,38 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.List;
+
 /**
  * Created by Theresa on 2016-10-04.
  */
-public class CustomGrid extends BaseAdapter{
-    private Context mContext;
-    private final String[] countries;
-    private final int[] Imageid;
+public class CustomGrid extends ArrayAdapter<Country>{
 
-    public CustomGrid(Context c,String[] countries,int[] Imageid ) {
-        mContext = c;
-        this.Imageid = Imageid;
-        this.countries = countries;
-    }
+    private int resourceId;
 
-    @Override
-    public int getCount() {
-        // TODO Auto-generated method stub
-        return countries.length;
-    }
-
-    @Override
-    public Object getItem(int position) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        // TODO Auto-generated method stub
-        return 0;
+    public CustomGrid(Context context, int textViewResourceId, List<Country> objects){
+        super(context, textViewResourceId, objects);
+        resourceId = textViewResourceId;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // TODO Auto-generated method stub
+        Country country = getItem(position);
         View grid;
-        LayoutInflater inflater = (LayoutInflater) mContext
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
         if (convertView == null) {
-
-            grid = new View(mContext);
-            grid = inflater.inflate(R.layout.grid_single, null);
-            TextView textView = (TextView) grid.findViewById(R.id.grid_text);
-            ImageView imageView = (ImageView)grid.findViewById(R.id.grid_image);
-            textView.setText(countries[position]);
-            imageView.setImageResource(Imageid[position]);
+            grid = LayoutInflater.from(getContext()).inflate(resourceId, null);
         } else {
             grid = (View) convertView;
         }
+        TextView textView = (TextView) grid.findViewById(R.id.grid_text);
+        ImageView imageView = (ImageView)grid.findViewById(R.id.grid_image);
+        textView.setText(country.getName());
+        imageView.setImageResource(country.getImageId());
 
         return grid;
     }
