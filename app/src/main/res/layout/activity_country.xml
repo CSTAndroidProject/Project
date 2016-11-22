@@ -42,8 +42,8 @@
             android:textStyle="normal|bold"
             android:textSize="@dimen/font_size_content"/>
         <TextView
-            android:layout_height="wrap_content"
             android:id="@+id/capitalText"
+            android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginLeft="56dp"
             android:textColor="@color/white"
