@@ -58,6 +58,23 @@
             android:layout_marginRight="20dp"/>
     </TableRow>
 
-
+    <TableRow>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="37dp"
+            android:textColor="@color/white"
+            android:textStyle="normal|bold"
+            android:textSize="@dimen/font_size_content"
+            android:text="Scores:"/>
+        <TextView
+            android:id="@+id/scoreText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="37dp"
+            android:textColor="@color/white"
+            android:textStyle="normal|bold"
+            android:textSize="@dimen/font_size_content"/>
+    </TableRow>>
 
 </TableLayout>

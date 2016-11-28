@@ -30,6 +30,7 @@
     <Button
         android:id="@+id/button4"
         style="@style/button_text"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -42,6 +43,7 @@
         android:id="@+id/scoreText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:textColor="@color/white"
         android:textStyle="normal|bold"
         android:textSize="@dimen/font_size_content"/>

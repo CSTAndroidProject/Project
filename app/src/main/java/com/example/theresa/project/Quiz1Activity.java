@@ -14,7 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class Quiz1Activity extends AppCompatActivity implements View.OnClickListener{
+public class Quiz1Activity extends AppCompatActivity{
 
     private List<Country> countryList = new ArrayList<Country>();
     private Country country;
@@ -45,40 +45,46 @@ public class Quiz1Activity extends AppCompatActivity implements View.OnClickList
         int rndInt = new Random().nextInt(countryList.size());
         country = countryList.get(rndInt);
         int resID = country.getImageId();
-        String rndStr = country.getName();
+        String answer = country.getName();
         flag.setImageResource(resID);
 
-        // load four options on the button randomly
+        // remove duplicate
         List<Country> countries = pickName(countryList,4);
-        this.option_1.setText(countries.get(0).getName());
-        this.option_2.setText(countries.get(1).getName());
-        this.option_3.setText(countries.get(2).getName());
-        this.option_4.setText(countries.get(3).getName());
+        String [] options = {answer,countries.get(0).getName(),countries.get(1).getName(),countries.get(2).getName()};
+        for (int i = 0; i < options.length; i++) {
+            for (int k = i + 1; k < options.length; k++) {
+                if (options[i] == options[k]) {
+                    options[k]= countries.get(3).getName();
+                }
+            }
+        }
 
-        //load name to match loading flag image
-        int[] buttons = new int[]{R.id.button1, R.id.button2, R.id.button3, R.id.button4};
-        int rndbtn = buttons[new Random().nextInt(buttons.length)];
-        Button button = (Button)findViewById(rndbtn);
-        button.setText(rndStr);
-
-        this.option_1.setOnClickListener(this);
-        this.option_2.setOnClickListener(this);
-        this.option_3.setOnClickListener(this);
-        this.option_4.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View view) {
-        Button clicked = (Button)view;
-        if(clicked.getText().toString()== country.getName()){
-            Toast.makeText(this, "Correct!", Toast.LENGTH_SHORT).show();
-            score++;
-            TextView scores = (TextView) findViewById(R.id.scoreText);
-            scores.setText(Integer.toString(score));
-            loadQuestion();
-        }else{
-            Toast.makeText(this, "Wrong!", Toast.LENGTH_LONG).show();
-            this.finish();
+        // load four options on the button randomly
+        Button btns[] = {this.option_1, this.option_2, this.option_3, this.option_4};
+        List<Integer> idx = new ArrayList<Integer>();
+        for (final Button btn: btns){
+            int n = new Random().nextInt(4);
+            while(idx.contains(n)){
+                n = new Random().nextInt(4);
+            }
+            idx.add(n);
+            btn.setText(options[n]);
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Button clicked = (Button)view;
+                    if(clicked.getText().toString()== country.getName()){
+                        Toast.makeText(Quiz1Activity.this, "Correct!", Toast.LENGTH_SHORT).show();
+                        score++;
+                        TextView scores = (TextView) findViewById(R.id.scoreText);
+                        scores.setText(Integer.toString(score));
+                        loadQuestion();
+                    }else{
+                        Toast.makeText(Quiz1Activity.this, "Wrong!", Toast.LENGTH_LONG).show();
+                        finish();
+                    }
+                }
+            });
         }
     }
 

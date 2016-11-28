@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class Quiz2Activity extends AppCompatActivity implements View.OnClickListener {
+public class Quiz2Activity extends AppCompatActivity{
 
     private List<Country> countryList = new ArrayList<Country>();
     private Country country;
@@ -22,6 +23,7 @@ public class Quiz2Activity extends AppCompatActivity implements View.OnClickList
     private ImageView flag2;
     private ImageView flag3;
     private ImageView flag4;
+    private static int score = 0;
 
 
     @Override
@@ -39,39 +41,55 @@ public class Quiz2Activity extends AppCompatActivity implements View.OnClickList
         this.flag3 = (ImageView)findViewById(R.id.image3);
         this.flag4 = (ImageView)findViewById(R.id.image4);
 
+        // load country name randomly
         int rndInt = new Random().nextInt(countryList.size());
         country = countryList.get(rndInt);
         String rndStr = country.getName();
-        int resID = country.getImageId();
+        int answer = country.getImageId();
         this.name.setText(rndStr);
 
+        // load four options on imageView randomly
         List<Country> countries = pickFlag(countryList,4);
-        this.flag1.setImageResource(countries.get(0).getImageId());
-        this.flag2.setImageResource(countries.get(1).getImageId());
-        this.flag3.setImageResource(countries.get(2).getImageId());
-        this.flag4.setImageResource(countries.get(3).getImageId());
+        int [] options = {answer, countries.get(0).getImageId(), countries.get(1).getImageId(), countries.get(2).getImageId()};
+        for (int i = 0; i < options.length; i++) {
+            for (int k = i + 1; k < options.length; k++) {
+                if (options[i] == options[k]) {
+                    options[k]= countries.get(3).getImageId();
+                }
+            }
+        }
 
-        int[] images = new int[]{R.id.image1, R.id.image2, R.id.image3, R.id.image4};
-        int rndimg = images[new Random().nextInt(images.length)];
-        ImageView image = (ImageView)findViewById(rndimg);
-        image.setImageResource(resID);
-
-        this.flag1.setOnClickListener(this);
-        this.flag2.setOnClickListener(this);
-        this.flag3.setOnClickListener(this);
-        this.flag4.setOnClickListener(this);
+        // load four options on the imageView randomly
+        ImageView images[] = {this.flag1, this.flag2, this.flag3, this.flag4};
+        List<Integer> idx = new ArrayList<Integer>();
+        for (final ImageView image: images){
+            int n = new Random().nextInt(4);
+            while(idx.contains(n)){
+                n = new Random().nextInt(4);
+            }
+            idx.add(n);
+            image.setImageResource(options[n]);
+            image.setTag(options[n]);
+            image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(getDrawableId(image)==country.getImageId()){
+                        Toast.makeText(Quiz2Activity.this, "Correct!", Toast.LENGTH_SHORT).show();
+                        score++;
+                        TextView scores = (TextView) findViewById(R.id.scoreText);
+                        scores.setText(Integer.toString(score));
+                        loadQuestion();
+                    }else{
+                        Toast.makeText(Quiz2Activity.this, "Wrong!", Toast.LENGTH_LONG).show();
+                        finish();
+                    }
+                }
+            });
+        }
     }
 
-    @Override
-    public void onClick(View view) {
-        ImageView clicked = (ImageView) view;
-        if(clicked.getId()==country.getImageId()){
-            Toast.makeText(this, "Correct!", Toast.LENGTH_SHORT).show();
-            loadQuestion();
-        }else{
-            Toast.makeText(this, "Wrong!", Toast.LENGTH_LONG).show();
-            this.finish();
-        }
+    private int getDrawableId(ImageView iv) {
+        return (Integer) iv.getTag();
     }
 
     public static List<Country> pickFlag(List<Country>lst, int n){
